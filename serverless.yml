@@ -5,21 +5,22 @@ plugins:
 
   - serverless-python-requirements
   - serverless-wsgi
+  - serverless-dynamodb-local
 
 
 custom:
-  
   tableName: 'user1-table-${self:provider.stage}'
 
   wsgi:
-
     app: app.app
-
     packRequirements: false
 
   pythonRequirements:
-
     dockerizePip: non-linux
+
+  dynamodb:
+    start:
+      migrate: true
 
 
 provider:
@@ -63,7 +64,7 @@ functions:
 
   app:
 
-    handler: wsgi.handler.handler
+    handler: wsgi.handler
 
     events:
 

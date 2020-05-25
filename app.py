@@ -9,13 +9,25 @@ app = Flask(__name__)
 
 # Database configuration
 USER_TABLE = os.environ['USER1_TABLE']
-dynamodb = boto3.client('dynamodb', region_name='us-east-1')
+IS_OFFLINE = os.environ.get('IS_OFFLINE')
+if IS_OFFLINE:
+    dynamodb = boto3.client(
+        'dynamodb',
+        region_name='localhost',
+        endpoint_url='http://localhost:8000'
+    )
+else:
+    dynamodb = boto3.client('dynamodb', region_name='us-east-1')
 
+
+# dynamodb = boto3.client('dynamodb', region_name='us-east-1')
 
 
 def authenticate(user, userPassword):
-    if user.password == userPassword:
-        return user
+    if user.get('password').get('S') == userPassword:
+        return True
+    else:
+        return False
 
 
 def findUserByEmail(userEmail):
@@ -29,6 +41,16 @@ def findUserByEmail(userEmail):
     return item
 
 
+def addUser(userEmail, userPassword):
+    resp = dynamodb.put_item(
+        TableName=USER_TABLE,
+        Item={
+            'email': {'S': userEmail},
+            'password': {'S': userPassword}
+        }
+    )
+
+
 @app.route("/user/login", methods=["POST"])
 def logInUser():
     userEmail = request.json.get('email')
@@ -38,9 +60,25 @@ def logInUser():
     if user is None:
         return jsonify({'message': 'Invalid credentials'}), 401
     else:
-        authenticate(user, userPassword)
+        if not authenticate(user, userPassword):
+            return jsonify({'message': 'Invalid credentials'}), 401
 
     return jsonify({'message': 'Everything is ok'}), 200
+
+
+@app.route("/user/signup", methods=["POST"])
+def signUpUser():
+    userEmail = request.json.get('email')
+    userPassword = request.json.get('password')
+
+    user = findUserByEmail(userEmail)
+
+    if user is not None:
+        return jsonify({'message': 'Email already registered'}), 409
+    else:
+        addUser(userEmail, userPassword)
+
+    return jsonify({'message': 'User succesfuly created'}), 200
 
 
 @app.route("/")

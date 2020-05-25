@@ -1,8 +1,8 @@
-# insumos-medicos-api-python
+# Insumos-medicos-api-python
 
 This project contains source code and supporting files for a serverless application based on Amazon AWS Lambda.
 
-##Requirements
+## Requirements
 _note: the instructions or commands are for linux based OS's. For Windows installation instructions check each provider site. Although using this may present trouble on Windows's based systemes due to Docker compatibility issues_ 
 
 For this project we'll need these tools:
@@ -15,7 +15,7 @@ For this project we'll need these tools:
 - A code editor or an IDE (VSCode, Pycharm, etc).
 - GIT (required for versioning)
 
-###NodeJS installation
+### NodeJS installation
 Run on terminal:
 
 ```bash

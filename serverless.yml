@@ -1,0 +1,108 @@
+service: serverless-flask
+
+
+plugins:
+
+  - serverless-python-requirements
+  - serverless-wsgi
+  - serverless-dynamodb-local
+
+
+custom:
+  tableName: 'user1-table-${self:provider.stage}'
+
+  wsgi:
+    app: app.app
+    packRequirements: false
+
+  pythonRequirements:
+    dockerizePip: non-linux
+
+  dynamodb:
+    start:
+      migrate: true
+
+
+provider:
+
+  name: aws
+
+  runtime: python3.6
+
+  stage: dev
+
+  region: us-east-1
+
+  iamRoleStatements:
+
+    - Effect: Allow
+
+      Action:
+
+        - dynamodb:Query
+
+        - dynamodb:Scan
+
+        - dynamodb:GetItem
+
+        - dynamodb:PutItem
+
+        - dynamodb:UpdateItem
+
+        - dynamodb:DeleteItem
+
+      Resource:
+
+        - { "Fn::GetAtt": ["User1DynamoDBTable", "Arn" ] }
+
+  environment:
+
+    USER1_TABLE: ${self:custom.tableName}
+
+
+functions:
+
+  app:
+
+    handler: wsgi.handler.handler
+
+    events:
+
+      - http: ANY /
+
+      - http: 'ANY {proxy+}'
+
+
+resources:
+
+  Resources:
+
+    User1DynamoDBTable:
+
+      Type: 'AWS::DynamoDB::Table'
+
+      Properties:
+
+        AttributeDefinitions:
+
+          -
+
+            AttributeName: email
+
+            AttributeType: S
+
+        KeySchema:
+
+          -
+
+            AttributeName: email
+
+            KeyType: HASH
+
+        ProvisionedThroughput:
+
+          ReadCapacityUnits: 1
+
+          WriteCapacityUnits: 1
+
+        TableName: ${self:custom.tableName}

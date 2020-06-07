@@ -1,7 +1,8 @@
 import json
 from flask import Flask, jsonify, request
-# from flask_jwt import JWT, jwt_required, current_identity
-# from werkzeug.security import safe_str_cmp
+import datetime
+import bcrypt
+import jwt
 import os
 import boto3
 
@@ -19,13 +20,38 @@ if IS_OFFLINE:
 else:
     dynamodb = boto3.client('dynamodb', region_name='us-east-1')
 
+app.config['SECRET_KEY'] = 'super-secret'
+
 
 # dynamodb = boto3.client('dynamodb', region_name='us-east-1')
 
 
-def authenticate(user, userPassword):
-    if user.get('password').get('S') == userPassword:
-        return True
+def encodeAuthToken(userEmail):
+    """
+    Generates the Auth Token
+    :return: string
+    """
+    try:
+        payload = {
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, hours=1),
+            'iat': datetime.datetime.utcnow(),
+            'sub': userEmail
+        }
+        return jwt.encode(
+            payload,
+            app.config.get('SECRET_KEY'),
+            algorithm='HS256'
+        )
+    except Exception as e:
+        return e
+
+
+def authenticate(user, aPassword):
+    userPassword = user.get('password').get('B')
+    userEmail = user.get('email').get('S')
+
+    if bcrypt.checkpw(aPassword.encode('utf8'), userPassword):
+        return encodeAuthToken(userEmail).decode()
     else:
         return False
 
@@ -42,13 +68,18 @@ def findUserByEmail(userEmail):
 
 
 def addUser(userEmail, userPassword):
+    authToken = encodeAuthToken(userEmail)
+
+    hashedPass = bcrypt.hashpw(userPassword.encode('utf8'), bcrypt.gensalt())
     resp = dynamodb.put_item(
         TableName=USER_TABLE,
         Item={
             'email': {'S': userEmail},
-            'password': {'S': userPassword}
+            'password': {'B': hashedPass}
         }
     )
+
+    return authToken.decode()
 
 
 @app.route("/user/login", methods=["POST"])
@@ -60,10 +91,11 @@ def logInUser():
     if user is None:
         return jsonify({'message': 'Invalid credentials'}), 401
     else:
-        if not authenticate(user, userPassword):
+        authToken = authenticate(user, userPassword)
+        if not authToken:
             return jsonify({'message': 'Invalid credentials'}), 401
 
-    return jsonify({'message': 'Everything is ok'}), 200
+    return jsonify({'token': authToken}), 200
 
 
 @app.route("/user/signup", methods=["POST"])
@@ -76,11 +108,12 @@ def signUpUser():
     if user is not None:
         return jsonify({'message': 'Email already registered'}), 409
     else:
-        addUser(userEmail, userPassword)
+        authToken = addUser(userEmail, userPassword)
 
-    return jsonify({'message': 'User succesfuly created'}), 200
+    return jsonify({'token': authToken}), 200
 
 
+# test route
 @app.route("/")
 def hello():
     return "Hello World!"

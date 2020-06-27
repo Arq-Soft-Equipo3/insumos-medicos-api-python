@@ -1,18 +1,16 @@
-import json
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-import user
-import auth
+from src import auth, user
 
 app = Flask(__name__)
 CORS(app)
 
 
-def createUserWith(userEmail, userPassword):
+def createUserWith(userEmail, userPassword, repeatedPassword, phone, organization,position, city):
     authToken = auth.AuthManager().encodeAuthToken(userEmail)
 
-    user = user.User(userEmail, userPassword)
-    user.addUser() 
+    newUser = user.User(userEmail, userPassword, repeatedPassword, phone, organization,position, city)
+    newUser.addUser() 
 
     return authToken.decode()
 
@@ -22,11 +20,11 @@ def logInUser():
     userEmail = request.json.get('email')
     userPassword = request.json.get('password')
 
-    user = user.User.findUserByEmail(userEmail)
-    if user is None:
+    usr = user.User.findUserByEmail(userEmail)
+    if usr is None:
         return jsonify({'message': 'Invalid credentials'}), 401
     else:
-        authToken = auth.AuthManager().authenticate(user, userPassword)
+        authToken = auth.AuthManager().authenticate(usr, userPassword)
         if not authToken:
             return jsonify({'message': 'Invalid credentials'}), 401
 
@@ -37,13 +35,18 @@ def logInUser():
 def signUpUser():
     userEmail = request.json.get('email')
     userPassword = request.json.get('password')
+    repeatedPassword = request.json.get('repeat_password')
+    phone = request.json.get('phone')
+    organization = request.json.get('organization')
+    position = request.json.get('position')
+    city = request.json.get('city')
 
-    user = user.User.findUserByEmail(userEmail)
+    usr = user.User.findUserByEmail(userEmail)
 
-    if user is not None:
+    if usr is not None:
         return jsonify({'message': 'Email already registered'}), 409
     else:
-        authToken = createUserWith(userEmail, userPassword)
+        authToken = createUserWith(userEmail, userPassword, repeatedPassword, phone, organization,position, city)
 
     return jsonify({'token': authToken}), 200
 

@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "5af33c8f-624d-4afe-88eb-5ee9012db1ff",
+		"name": "Insumos dev",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "local",
+			"item": [
+				{
+					"name": "user SignUp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"asdfg@hotmail.com\",\n    \"password\": \"sarasa\",\n    \"repeat_password\": \"sarasa\",\n    \"phone\": \"1168727790\",\n    \"organization\": \"PAMI\",\n    \"position\": \"Gerente de almuerzos\",\n    \"city\": \"Domselaar\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/user/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"user",
+								"signup"
+							]
+						},
+						"description": "Create an user profile"
+					},
+					"response": []
+				},
+				{
+					"name": "User LogIn",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"asdfg@hotmail.com\",\n    \"password\": \"sarasa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Medicine application",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5MDY1MTEsImlhdCI6MTU5MzkwMjkxMSwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.t7iT5MaDnDcTz-aQrgZ-wBT68ZGI_4weK907EAOvZ_k",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"supply\": \"Medicamento\",\n    \"area\": \"Tecnicos\",\n    \"medicine\": \"Paracetamol\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/applications",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"applications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Simple application",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5MDY1MTEsImlhdCI6MTU5MzkwMjkxMSwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.t7iT5MaDnDcTz-aQrgZ-wBT68ZGI_4weK907EAOvZ_k",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"supply\": \"Medicamento\",\n    \"area\": \"Tecnicos\",\n    \"medicine\": \"Paracetamol\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/applications",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"applications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all applications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5MDY1MTEsImlhdCI6MTU5MzkwMjkxMSwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.t7iT5MaDnDcTz-aQrgZ-wBT68ZGI_4weK907EAOvZ_k",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/applications",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"applications"
+							]
+						},
+						"description": "Retrieve all the applications for the logged user"
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel application",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5MDY1MTEsImlhdCI6MTU5MzkwMjkxMSwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.t7iT5MaDnDcTz-aQrgZ-wBT68ZGI_4weK907EAOvZ_k",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/applications/cancel?id=5803",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"applications",
+								"cancel"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "5803"
+								}
+							]
+						},
+						"description": "Cancel an application"
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "online",
+			"item": [],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

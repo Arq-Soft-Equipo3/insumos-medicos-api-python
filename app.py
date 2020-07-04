@@ -16,9 +16,9 @@ def createUserWith(userEmail, userPassword, repeatedPassword, phone, organizatio
     return authToken.decode()
 
 
-def createApplicationWith(bearer, supply, area):
+def createApplicationWith(bearer, supply, area, medicine):
     userEmail = decodeToken(bearer)
-    application = Application(userEmail, supply, area)
+    application = Application(userEmail, supply, area, medicine)
 
     return application.addApplication()
 
@@ -70,7 +70,8 @@ def submitApplication():
     bearer = request.headers.get('Authorization')
     supply = request.json.get('supply')
     area = request.json.get('area')
-    applicationID = createApplicationWith(bearer, supply, area)
+    medicine = request.json.get('medicine')
+    applicationID = createApplicationWith(bearer, supply, area, medicine)
 
     return jsonify({"message": "The application #" + applicationID + " was successfully submitted"}), 200
 
@@ -81,6 +82,17 @@ def applications():
     userEmail = decodeToken(bearer)
     appls = Application.applicationsBy(userEmail)
     return jsonify(appls), 200
+
+
+@app.route("/applications/cancel", methods=["POST"])
+def cancelApplication():
+    bearer = request.headers.get('Authorization')
+    userEmail = decodeToken(bearer)
+    if request.args.get('id') is None:
+        return jsonify({"errors": [{"field": "id", "message": "id is required"}]}), 422
+    else:
+        Application.cancelApplication(userEmail, request.args.get('id'))
+    return jsonify({'message': 'Application #' + request.args.get('id') + 'was succefully canceled'}), 200
 
 
 # test route

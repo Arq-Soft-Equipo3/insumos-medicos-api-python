@@ -23,3 +23,16 @@ class DatabaseManager:
 
     def applicationTable(self):
         return self.application_Table
+
+    def findApplicationBy(self, userEmail, applicationID):
+        application = self.dynamoDB().get_item(
+            TableName=self.applicationTable(),
+            Key={
+                'applicationID': {'S': applicationID},
+                'filler': {'S': userEmail}
+            }
+        )
+        item = application.get('Item')
+        if not item:
+            return None
+        return item

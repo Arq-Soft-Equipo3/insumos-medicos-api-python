@@ -74,7 +74,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5MDY1MTEsImlhdCI6MTU5MzkwMjkxMSwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.t7iT5MaDnDcTz-aQrgZ-wBT68ZGI_4weK907EAOvZ_k",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5ODI2MTYsImlhdCI6MTU5Mzk3OTAxNiwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.dPMj5zU2U74SORrJbIVfxbTkt_U3oIKeSPHyql-9Mdk",
 								"type": "text"
 							}
 						],
@@ -108,13 +108,13 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5MDY1MTEsImlhdCI6MTU5MzkwMjkxMSwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.t7iT5MaDnDcTz-aQrgZ-wBT68ZGI_4weK907EAOvZ_k",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5ODI2MTYsImlhdCI6MTU5Mzk3OTAxNiwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.dPMj5zU2U74SORrJbIVfxbTkt_U3oIKeSPHyql-9Mdk",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"supply\": \"Medicamento\",\n    \"area\": \"Tecnicos\",\n    \"medicine\": \"Paracetamol\"\n}",
+							"raw": "{\n    \"supply\": \"Medicamento\",\n    \"area\": \"Tecnicos\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -142,7 +142,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5MDY1MTEsImlhdCI6MTU5MzkwMjkxMSwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.t7iT5MaDnDcTz-aQrgZ-wBT68ZGI_4weK907EAOvZ_k",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5ODI2MTYsImlhdCI6MTU5Mzk3OTAxNiwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.dPMj5zU2U74SORrJbIVfxbTkt_U3oIKeSPHyql-9Mdk",
 								"type": "text"
 							}
 						],
@@ -168,12 +168,21 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5MDY1MTEsImlhdCI6MTU5MzkwMjkxMSwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.t7iT5MaDnDcTz-aQrgZ-wBT68ZGI_4weK907EAOvZ_k",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5ODI2MTYsImlhdCI6MTU5Mzk3OTAxNiwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.dPMj5zU2U74SORrJbIVfxbTkt_U3oIKeSPHyql-9Mdk",
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"4011\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:5000/applications/cancel?id=5803",
+							"raw": "http://localhost:5000/applications/cancel",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -182,12 +191,6 @@
 							"path": [
 								"applications",
 								"cancel"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "5803"
-								}
 							]
 						},
 						"description": "Cancel an application"

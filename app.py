@@ -88,11 +88,11 @@ def applications():
 def cancelApplication():
     bearer = request.headers.get('Authorization')
     userEmail = decodeToken(bearer)
-    if request.args.get('id') is None:
+    if request.json.get('id') is None:
         return jsonify({"errors": [{"field": "id", "message": "id is required"}]}), 422
     else:
-        Application.cancelApplication(userEmail, request.args.get('id'))
-    return jsonify({'message': 'Application #' + request.args.get('id') + 'was succefully canceled'}), 200
+        Application.cancelApplication(userEmail, request.json.get('id'))
+    return jsonify({'message': 'Application #' + request.json.get('id') + ' was succefully canceled'}), 200
 
 
 # test route

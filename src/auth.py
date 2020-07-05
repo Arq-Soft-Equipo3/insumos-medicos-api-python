@@ -13,7 +13,7 @@ class AuthManager:
     def encodeAuthToken(userEmail):
         try:
             payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, hours=1),
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, hours=5),
                 'iat': datetime.datetime.utcnow(),
                 'sub': userEmail
             }

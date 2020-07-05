@@ -44,10 +44,10 @@ class Application:
     def cancelApplication(userEmail, appID):
         app = applicationDatabaseManager.DatabaseManager().findApplicationBy(userEmail, appID)
         if app is None:
-            return ValueError('Application #' + appID + '')
+            return ValueError('Application #' + appID + ' Does not exist for the current user')
         else:
             appID = app['applicationID'].get('S')
-            appStatus = app['stat'].get('S')
+            appStatus = app['status'].get('S')
             appFiller = app['filler'].get('S')
             appArea = app['area'].get('S')
             appSupply = app['supply'].get('S')
@@ -63,7 +63,7 @@ class Application:
                 'applicationID': {'S': self.ID},
                 'filler': {'S': self.filler},
                 'area': {'S': self.area},
-                'stat': {'S': self.status},
+                'status': {'S': self.status},
                 'supply': {'S': self.supply},
             }
         else:
@@ -71,11 +71,10 @@ class Application:
                 'applicationID': {'S': self.ID},
                 'filler': {'S': self.filler},
                 'area': {'S': self.area},
-                'stat': {'S': self.status},
+                'status': {'S': self.status},
                 'supply': {'S': self.supply},
                 'drugName': {'S': self.drugName}
             }
-        print(type(itemToInsert))
         objectManager = applicationDatabaseManager.DatabaseManager()
         resp = objectManager.dynamoDB().put_item(
             TableName=objectManager.applicationTable(),
@@ -84,7 +83,6 @@ class Application:
         return self.ID
 
     def updateWithNewStatus(self):
-        print(self.ID)
         objectManager = applicationDatabaseManager.DatabaseManager()
         resp = objectManager.dynamoDB().update_item(
             TableName=objectManager.applicationTable(),
@@ -92,9 +90,12 @@ class Application:
                 'applicationID': {'S': self.ID},
                 'filler': {'S': self.filler}
             },
-            UpdateExpression="set stat = :stat",
+            UpdateExpression="set #stat = :stat",
             ExpressionAttributeValues={
                 ':stat': {'S': self.status}
+            },
+            ExpressionAttributeNames={
+                '#stat': 'status'
             }
         )
 

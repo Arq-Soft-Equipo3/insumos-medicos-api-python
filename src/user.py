@@ -39,7 +39,11 @@ class User:
             TableName=objectManager.userTable(),
             Item={
                 'email': {'S': self.email},
-                'password': {'B': self.password}
+                'password': {'B': self.password},
+                'phoneNumber': {'S': str(self.phoneNumber)},
+                'organization': {'S': self.organization},
+                'position': {'S': self.position},
+                'city': {'S': self.city}
             }
         )
         return resp

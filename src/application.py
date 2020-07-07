@@ -73,7 +73,7 @@ class Application:
                 'area': {'S': self.area},
                 'status': {'S': self.status},
                 'supply': {'S': self.supply},
-                'drugName': {'S': self.drugName}
+                'medicine': {'S': self.drugName}
             }
         objectManager = applicationDatabaseManager.DatabaseManager()
         resp = objectManager.dynamoDB().put_item(

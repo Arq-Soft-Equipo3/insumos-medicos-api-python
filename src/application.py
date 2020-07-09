@@ -14,7 +14,7 @@ class Application:
         self.area = area
         self.status = ApplicationStatus.PENDING.value
         self.drugName = drugName
-        self.timeStamp = datetime.datetime.now()
+        self.timeStamp = str(datetime.datetime.now())
 
     @classmethod
     def assertIsValidSupply(cls, supplyName):
@@ -71,7 +71,7 @@ class Application:
                 Item=self.itemToInsert()
             )
             return self.ID
-        except:
+        except Exception as e:
             raise DatabaseConnectionFailed("Connection with the database failed, please try again later")
 
     def itemToInsert(self):

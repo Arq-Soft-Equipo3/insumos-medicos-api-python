@@ -3,7 +3,7 @@ from enum import Enum
 
 class SupplyProvider(Enum):
     BARBIJOS = 'Barbijos'
-    MASCARAS = 'Mascaras protectoras'
+    MASCARAS = 'Máscaras protectoras'
     RESPIRADORES = 'Respiradores'
     GUANTES = 'Guantes'
-    MEDICAMENTO = 'Medicamento'
+    MEDICAMENTO = 'Medicamentos'

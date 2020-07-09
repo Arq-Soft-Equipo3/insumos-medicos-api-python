@@ -1,6 +1,7 @@
 import re
 import bcrypt
 from src import userDatabaseManager
+from src.customExceptions import InstanceCreationFailed, DatabaseConnectionFailed
 
 
 class User:
@@ -18,43 +19,49 @@ class User:
         if aPassword == anotherPassword:
             return bcrypt.hashpw(aPassword.encode('utf8'), bcrypt.gensalt())
         else:
-            raise ValueError('Passwords don not match')
+            raise InstanceCreationFailed('Passwords don not match')
 
     @classmethod
     def assertFieldsNotEmpty(cls,anEmailAddress, aPassword, aPhone, anOrganization, aPosition, aCity):
         if(not (not (anEmailAddress is None) and not (aPassword is None) and not (aPhone is None) and not (
                 anOrganization is None) and not (aPosition is None) and not (aCity is None))):
-            raise ValueError('Instance creation Failed')
+            raise InstanceCreationFailed('Missing Information')
 
     @classmethod
     def validateEmailAddressFor(cls, anEmailAddress):
         if not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", anEmailAddress):
-            raise ValueError('Invalid email address')
+            raise InstanceCreationFailed('Invalid email address')
         else:
             return anEmailAddress
 
     def addUser(self):
-        objectManager = userDatabaseManager.DatabaseManager()
-        resp = objectManager.dynamoDB().put_item(
-            TableName=objectManager.userTable(),
-            Item={
-                'email': {'S': self.email},
-                'password': {'B': self.password},
-                'phoneNumber': {'S': str(self.phoneNumber)},
-                'organization': {'S': self.organization},
-                'position': {'S': self.position},
-                'city': {'S': self.city}
-            }
-        )
-        return resp
+        try:
+            objectManager = userDatabaseManager.DatabaseManager()
+            resp = objectManager.dynamoDB().put_item(
+                TableName=objectManager.userTable(),
+                Item={
+                    'email': {'S': self.email},
+                    'password': {'B': self.password},
+                    'phoneNumber': {'S': str(self.phoneNumber)},
+                    'organization': {'S': self.organization},
+                    'position': {'S': self.position},
+                    'city': {'S': self.city}
+                }
+            )
+            return resp
+        except:
+            raise DatabaseConnectionFailed("Connection with the database failed, please try again later")
 
     def findUserByEmail(userEmail):
-        objectManager = userDatabaseManager.DatabaseManager()
-        user = objectManager.dynamoDB().get_item(
-            TableName=objectManager.userTable(),
-            Key={'email': {'S': userEmail}}
-        )
-        item = user.get('Item')
-        if not item:
-            return None
-        return item
+        try:
+            objectManager = userDatabaseManager.DatabaseManager()
+            user = objectManager.dynamoDB().get_item(
+                TableName=objectManager.userTable(),
+                Key={'email': {'S': userEmail}}
+            )
+            item = user.get('Item')
+            if not item:
+                return None
+            return item
+        except:
+            raise DatabaseConnectionFailed("Connection with the database failed, please try again later")

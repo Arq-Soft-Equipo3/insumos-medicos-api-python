@@ -4,6 +4,8 @@ import bcrypt
 import jwt
 import datetime
 
+from src.customExceptions import AuthorizationFailed
+
 
 class AuthManager:
     def __init__(self):
@@ -22,8 +24,8 @@ class AuthManager:
                 os.environ['SECRET_KEY'],
                 algorithm='HS256'
             )
-        except Exception as e:
-            return e
+        except:
+            raise AuthorizationFailed('Authentication Failed, try again')
 
     @staticmethod
     def decodeAuthToken(anAuthToken):
@@ -32,9 +34,9 @@ class AuthManager:
             payload = jwt.decode(anAuthToken, secretKey)
             return payload['sub']
         except jwt.ExpiredSignatureError:
-            return 'Token has expired. Please log in again.'
+            raise AuthorizationFailed('Token has expired. Please log in again.')
         except jwt.InvalidTokenError:
-            return 'Invalid token. Please log in again.'
+            raise  AuthorizationFailed('Invalid token. Please log in again.')
 
     def authenticate(self, user, aPassword):
         userPassword = user.get('password').get('B')
@@ -43,4 +45,4 @@ class AuthManager:
         if bcrypt.checkpw(aPassword.encode('utf8'), userPassword):
             return self.encodeAuthToken(userEmail).decode()
         else:
-            return False
+            raise AuthorizationFailed('Invalid credentials. Try again')

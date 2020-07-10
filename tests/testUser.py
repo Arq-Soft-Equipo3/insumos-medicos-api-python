@@ -2,6 +2,7 @@ from unittest import TestCase
 
 import bcrypt
 
+from src.customExceptions import InstanceCreationFailed
 from src.user import User
 
 
@@ -21,13 +22,13 @@ class TestUser(TestCase):
         self.assertEqual(newUser.city, 'Domselaar')
 
     def test_invalidEmailRaiseException(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(InstanceCreationFailed):
             User(self.invalidEmail, '132456', '132456','1168727790', 'PAMI', 'Gerente de insumos', 'Domselaar')
 
     def test_instanceCreationFailed(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(InstanceCreationFailed):
             User(self.validEmail, '132456', '132456','1168727790', 'PAMI', 'Gerente de insumos', None)
 
     def test_passwordsDoNotMatch(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(InstanceCreationFailed):
             User(self.validEmail, '132456', 'sarasa', '1168727790', 'PAMI', 'Gerente de insumos', 'Domselaar')

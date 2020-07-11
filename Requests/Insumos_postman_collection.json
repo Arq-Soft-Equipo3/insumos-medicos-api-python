@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"asdfg@hotmail.com\",\n    \"password\": \"sarasa\",\n    \"repeat_password\": \"sarasa\",\n    \"phone\": \"1168727790\",\n    \"organization\": \"PAMI\",\n    \"position\": \"Gerente de almuerzos\",\n    \"city\": \"Domselaar\"\n}",
+							"raw": "{\n    \"email\": \"user@hotmail.com\",\n    \"password\": \"sarasa\",\n    \"repeat_password\": \"sarasa\",\n    \"phone\": \"1168727790\",\n    \"organization\": \"PAMI\",\n    \"position\": \"Gerente de almuerzos\",\n    \"city\": \"Domselaar\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -45,7 +45,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"asdfg@hotmail.com\",\n    \"password\": \"sarasa\"\n}",
+							"raw": "{\n    \"email\": \"user@hotmail.com\",\n    \"password\": \"sarasa\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -74,13 +74,13 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5ODI2MTYsImlhdCI6MTU5Mzk3OTAxNiwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.dPMj5zU2U74SORrJbIVfxbTkt_U3oIKeSPHyql-9Mdk",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTQ0NTExODIsImlhdCI6MTU5NDQzMzE4Miwic3ViIjoidXNlckBob3RtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIn0.duyKbX7mbKnzC-JWQifLsTPs9uBIE3ltYsl2NSD1l6Y",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"supply\": \"Medicamento\",\n    \"area\": \"Tecnicos\",\n    \"medicine\": \"Paracetamol\"\n}",
+							"raw": "{\n    \"supply\": \"Medicamentos\",\n    \"area\": \"Tecnicos\",\n    \"medicine\": \"Paracetamol\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -108,13 +108,13 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5ODI2MTYsImlhdCI6MTU5Mzk3OTAxNiwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.dPMj5zU2U74SORrJbIVfxbTkt_U3oIKeSPHyql-9Mdk",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTQ0NTExODIsImlhdCI6MTU5NDQzMzE4Miwic3ViIjoidXNlckBob3RtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIn0.duyKbX7mbKnzC-JWQifLsTPs9uBIE3ltYsl2NSD1l6Y",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"supply\": \"Medicamento\",\n    \"area\": \"Tecnicos\"\n}",
+							"raw": "{\n    \"supply\": \"Barbijos\",\n    \"area\": \"Tecnicos\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -142,7 +142,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5ODI2MTYsImlhdCI6MTU5Mzk3OTAxNiwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.dPMj5zU2U74SORrJbIVfxbTkt_U3oIKeSPHyql-9Mdk",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTQ0NTExODIsImlhdCI6MTU5NDQzMzE4Miwic3ViIjoidXNlckBob3RtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIn0.duyKbX7mbKnzC-JWQifLsTPs9uBIE3ltYsl2NSD1l6Y",
 								"type": "text"
 							}
 						],
@@ -196,13 +196,275 @@
 						"description": "Cancel an application"
 					},
 					"response": []
+				},
+				{
+					"name": "Approve application",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTQ0NTE0MDgsImlhdCI6MTU5NDQzMzQwOCwic3ViIjoiYWRtaW5AaG90bWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciJ9.QwAX3XDKnDTPgqZfk5gbQ3agDdxOA_j6CyUWVEwbdMg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"2170\",\n    \"filler\": \"user@hotmail.com\",\n    \"provider\": \"Agujas S.A.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/applications/approve",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"applications",
+								"approve"
+							]
+						},
+						"description": "Cancel an application"
+					},
+					"response": []
+				},
+				{
+					"name": "Reject application",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTQ0NTE0MDgsImlhdCI6MTU5NDQzMzQwOCwic3ViIjoiYWRtaW5AaG90bWFpbC5jb20iLCJyb2xlIjoiYWRtaW5pc3RyYXRvciJ9.QwAX3XDKnDTPgqZfk5gbQ3agDdxOA_j6CyUWVEwbdMg"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"5411\",\n    \"filler\": \"user@hotmail.com\",\n    \"motive\": \"Fuera de presupuesto\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/applications/reject",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"applications",
+								"reject"
+							]
+						},
+						"description": "Cancel an application"
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
 		},
 		{
 			"name": "online",
-			"item": [],
+			"item": [
+				{
+					"name": "user SignUp Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"asdfg@hotmail.com\",\n    \"password\": \"sarasa\",\n    \"repeat_password\": \"sarasa\",\n    \"phone\": \"1168727790\",\n    \"organization\": \"PAMI\",\n    \"position\": \"Gerente de almuerzos\",\n    \"city\": \"Domselaar\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/user/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"user",
+								"signup"
+							]
+						},
+						"description": "Create an user profile"
+					},
+					"response": []
+				},
+				{
+					"name": "User LogIn Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"asdfg@hotmail.com\",\n    \"password\": \"sarasa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/user/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Medicine application Copy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5ODI2MTYsImlhdCI6MTU5Mzk3OTAxNiwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.dPMj5zU2U74SORrJbIVfxbTkt_U3oIKeSPHyql-9Mdk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"supply\": \"Medicamento\",\n    \"area\": \"Tecnicos\",\n    \"medicine\": \"Paracetamol\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/applications",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"applications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Simple application Copy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5ODI2MTYsImlhdCI6MTU5Mzk3OTAxNiwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.dPMj5zU2U74SORrJbIVfxbTkt_U3oIKeSPHyql-9Mdk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"supply\": \"Medicamento\",\n    \"area\": \"Tecnicos\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/applications",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"applications"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all applications Copy",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5ODI2MTYsImlhdCI6MTU5Mzk3OTAxNiwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.dPMj5zU2U74SORrJbIVfxbTkt_U3oIKeSPHyql-9Mdk",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/applications",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"applications"
+							]
+						},
+						"description": "Retrieve all the applications for the logged user"
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel application Copy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1OTM5ODI2MTYsImlhdCI6MTU5Mzk3OTAxNiwic3ViIjoiYXNkZmdAaG90bWFpbC5jb20ifQ.dPMj5zU2U74SORrJbIVfxbTkt_U3oIKeSPHyql-9Mdk",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"4011\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5000/applications/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"applications",
+								"cancel"
+							]
+						},
+						"description": "Cancel an application"
+					},
+					"response": []
+				}
+			],
 			"protocolProfileBehavior": {}
 		}
 	],

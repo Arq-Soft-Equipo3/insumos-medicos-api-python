@@ -3,6 +3,6 @@ from enum import Enum
 
 class ApplicationStatus(Enum):
     PENDING = 'Pending'
-    ACCEPTED = 'Accepted'
+    APPROVED = 'Approved'
     CANCELED = 'Canceled'
     REJECTED = 'Rejected'

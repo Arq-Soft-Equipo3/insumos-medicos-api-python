@@ -26,13 +26,13 @@ class TestApplication(TestCase):
 
     def test_approveApplication(self):
         application = Application('sarasa@hotmail.com', 'Barbijos', 'Técnicos', None)
-        application.approveApplication()
+        application.approve()
 
-        self.assertEqual(application.status, 'Accepted')
+        self.assertEqual(application.status, 'Approved')
 
     def test_canceledApplicationCannotBeApproved(self):
         application = Application('sarasa@hotmail.com', 'Barbijos', 'Técnicos', None)
         application.cancel()
 
         with self.assertRaises(StatusTransitionFailed):
-            application.approveApplication()
+            application.approve()

@@ -9,10 +9,10 @@ CORS(app)
 
 
 def createUserWith(userEmail, userPassword, repeatedPassword, phone, organization, position, city):
-    authToken = auth.AuthManager().encodeAuthToken(userEmail)
 
     newUser = user.User(userEmail, userPassword, repeatedPassword, phone, organization, position, city)
     newUser.addUser()
+    authToken = auth.AuthManager().encodeAuthToken(userEmail, newUser.role)
 
     return authToken.decode()
 
@@ -116,6 +116,44 @@ def cancelApplication():
         else:
             Application.cancelApplication(userEmail, request.json.get('id'))
         return jsonify({'message': 'Application #' + request.json.get('id') + ' was successfully canceled'}), 200
+    except DatabaseConnectionFailed as dcf:
+        return jsonify({"message": dcf.message}), 500
+    except AuthorizationFailed as af:
+        return jsonify({"message": af.message}), 401
+
+
+@app.route("/applications/approve", methods=["POST"])
+def approveApplication():
+    try:
+        bearer = request.headers.get('Authorization')
+        applicationID = request.json.get('id')
+        provider = request.json.get('provider')
+        filler = request.json.get('filler')
+        decodeToken(bearer)
+        if applicationID is None or provider is None or filler is None:
+            return jsonify({"errors": [{"field": "id", "message": "id is required"}]}), 422
+        else:
+            Application.approveApplication(filler, applicationID, provider)
+        return jsonify({'message': 'Application #' + applicationID + ' was approved'}), 200
+    except DatabaseConnectionFailed as dcf:
+        return jsonify({"message": dcf.message}), 500
+    except AuthorizationFailed as af:
+        return jsonify({"message": af.message}), 401
+
+
+@app.route("/applications/reject", methods=["POST"])
+def rejectApplication():
+    try:
+        bearer = request.headers.get('Authorization')
+        applicationID = request.json.get('id')
+        motive = request.json.get('motive')
+        filler = request.json.get('filler')
+        decodeToken(bearer)
+        if applicationID is None or motive is None or filler is None:
+            return jsonify({"errors": [{"field": "id", "message": "id is required"}]}), 422
+        else:
+            Application.rejectApplication(filler, applicationID, motive)
+        return jsonify({'message': 'Application #' + applicationID + ' was rejected'}), 200
     except DatabaseConnectionFailed as dcf:
         return jsonify({"message": dcf.message}), 500
     except AuthorizationFailed as af:

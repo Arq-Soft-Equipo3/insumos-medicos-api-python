@@ -23,3 +23,27 @@ class DatabaseManager:
 
     def userTable(self):
         return self.user_Table
+
+    def addUser(self, anUser):
+        self.dynamoDB().put_item(
+            TableName=self.userTable(),
+            Item={
+                'email': {'S': anUser.email},
+                'password': {'B': anUser.password},
+                'phoneNumber': {'S': str(anUser.phoneNumber)},
+                'organization': {'S': anUser.organization},
+                'position': {'S': anUser.position},
+                'city': {'S': anUser.city},
+                'role': {'S': anUser.role}
+            }
+        )
+
+    def findUserByEmail(self, anUserEmail):
+        user = self.dynamoDB().get_item(
+            TableName=self.userTable(),
+            Key={'email': {'S': anUserEmail}}
+        )
+        item = user.get('Item')
+        if not item:
+            return None
+        return item

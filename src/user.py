@@ -1,7 +1,11 @@
+import logging
 import re
 import bcrypt
 from src import userDatabaseManager
 from src.customExceptions import InstanceCreationFailed, DatabaseConnectionFailed
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 class User:
@@ -13,55 +17,51 @@ class User:
         self.organization = anOrganization
         self.position = aPosition
         self.city = aCity
+        self.role = 'user'
 
     @classmethod
     def checkAndGenerateHashedPassword(cls, aPassword, anotherPassword):
         if aPassword == anotherPassword:
             return bcrypt.hashpw(aPassword.encode('utf8'), bcrypt.gensalt())
         else:
-            raise InstanceCreationFailed('Passwords don not match')
+            logger.info('Log: Passwords does not match')
+            raise InstanceCreationFailed('Passwords does not match')
 
     @classmethod
-    def assertFieldsNotEmpty(cls,anEmailAddress, aPassword, aPhone, anOrganization, aPosition, aCity):
-        if(not (not (anEmailAddress is None) and not (aPassword is None) and not (aPhone is None) and not (
+    def assertFieldsNotEmpty(cls, anEmailAddress, aPassword, aPhone, anOrganization, aPosition, aCity):
+        if (not (not (anEmailAddress is None) and not (aPassword is None) and not (aPhone is None) and not (
                 anOrganization is None) and not (aPosition is None) and not (aCity is None))):
+            logger.info(
+                'Log: One parameter is missing ' + str(anEmailAddress) + str(aPhone) + str(anOrganization) + str(
+                    aPosition) + str(aCity))
             raise InstanceCreationFailed('Missing Information')
 
     @classmethod
     def validateEmailAddressFor(cls, anEmailAddress):
         if not re.fullmatch(r"[^@]+@[^@]+\.[^@]+", anEmailAddress):
+            logger.info('Invalid email address ' + anEmailAddress)
             raise InstanceCreationFailed('Invalid email address')
         else:
             return anEmailAddress
 
+    @classmethod
+    def findUserByEmail(cls, userEmail):
+        #Should return an instantiated user
+        try:
+            return userDatabaseManager.DatabaseManager().findUserByEmail(userEmail)
+        except Exception as e:
+            logger.error('Database error occurred: ' + str(e))
+            raise DatabaseConnectionFailed('Connection with the database failed, please try again later')
+
     def addUser(self):
         try:
-            objectManager = userDatabaseManager.DatabaseManager()
-            resp = objectManager.dynamoDB().put_item(
-                TableName=objectManager.userTable(),
-                Item={
-                    'email': {'S': self.email},
-                    'password': {'B': self.password},
-                    'phoneNumber': {'S': str(self.phoneNumber)},
-                    'organization': {'S': self.organization},
-                    'position': {'S': self.position},
-                    'city': {'S': self.city}
-                }
-            )
-            return resp
-        except:
-            raise DatabaseConnectionFailed("Connection with the database failed, please try again later")
+            userDatabaseManager.DatabaseManager().addUser(self)
+        except Exception as e:
+            logger.error('Database error occurred: ' + str(e))
+            raise DatabaseConnectionFailed('Connection with the database failed, please try again later')
 
-    def findUserByEmail(userEmail):
-        try:
-            objectManager = userDatabaseManager.DatabaseManager()
-            user = objectManager.dynamoDB().get_item(
-                TableName=objectManager.userTable(),
-                Key={'email': {'S': userEmail}}
-            )
-            item = user.get('Item')
-            if not item:
-                return None
-            return item
-        except:
-            raise DatabaseConnectionFailed("Connection with the database failed, please try again later")
+    def isAdministrator(self):
+        return self.role == 'Administrator'
+
+
+

@@ -1,5 +1,11 @@
+import logging
 import os
 import boto3
+
+from src.customExceptions import DatabaseConnectionFailed
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 class DatabaseManager:
@@ -36,3 +42,87 @@ class DatabaseManager:
         if not item:
             return None
         return item
+
+    def allApplications(self):
+        applications = self.dynamoDB().scan(
+            TableName=self.applicationTable()
+        )
+        items = applications['Items']
+        if not items:
+            return []
+        return items
+
+    def applicationsForUser(self, userEmail):
+        applications = self.dynamoDB().query(
+            TableName=self.applicationTable(),
+            KeyConditionExpression='filler = :filler',
+            ExpressionAttributeValues={':filler': {'S': userEmail}}
+        )
+        items = applications['Items']
+        if not items:
+            return []
+        return items
+
+    def cancelApplication(self, anApplication):
+        try:
+            self.dynamoDB().update_item(
+                TableName=self.applicationTable(),
+                Key={
+                    'applicationID': {'S': anApplication.ID},
+                    'filler': {'S': anApplication.filler}
+                },
+                UpdateExpression="set #stat = :stat",
+                ExpressionAttributeValues={
+                    ':stat': {'S': anApplication.status}
+                },
+                ExpressionAttributeNames={
+                    '#stat': 'status'
+                }
+            )
+        except Exception as e:
+            logger.error('Database error: ' + str(e))
+            raise DatabaseConnectionFailed("Connection with the database failed, please try again later")
+
+    def approveApplication(self, anApplication, aProvider):
+        try:
+            self.dynamoDB().update_item(
+                TableName=self.applicationTable(),
+                Key={
+                    'applicationID': {'S': anApplication.ID},
+                    'filler': {'S': anApplication.filler}
+                },
+                UpdateExpression="set #stat = :stat, #prov = :provider",
+                ExpressionAttributeValues={
+                    ':stat': {'S': anApplication.status},
+                    ':provider': {'S': aProvider}
+                },
+                ExpressionAttributeNames={
+                    '#stat': 'status',
+                    '#prov': 'provider'
+                }
+            )
+        except Exception as e:
+            logger.error('Database error: ' + str(e))
+            raise DatabaseConnectionFailed("Connection with the database failed, please try again later")
+
+    def rejectApplication(self, anApplication, aMotive):
+        try:
+            self.dynamoDB().update_item(
+                TableName=self.applicationTable(),
+                Key={
+                    'applicationID': {'S': anApplication.ID},
+                    'filler': {'S': anApplication.filler}
+                },
+                UpdateExpression="set #stat = :stat, #motive = :motive",
+                ExpressionAttributeValues={
+                    ':stat': {'S': anApplication.status},
+                    ':motive': {'S': aMotive}
+                },
+                ExpressionAttributeNames={
+                    '#stat': 'status',
+                    '#motive': 'motive'
+                }
+            )
+        except Exception as e:
+            logger.error('Database error: ' + str(e))
+            raise DatabaseConnectionFailed("Connection with the database failed, please try again later")

@@ -1,8 +1,15 @@
+import logging
+
 from src import applicationStatus, applicationDatabaseManager, supplyProvider, customExceptions, idProvider
 from src.customExceptions import DatabaseConnectionFailed, InstanceCreationFailed, StatusTransitionFailed
 from src.applicationStatus import ApplicationStatus
 from src.supplyProvider import SupplyProvider
 import datetime
+
+from src.user import User
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 class Application:
@@ -21,6 +28,7 @@ class Application:
         for supply in SupplyProvider:
             if supply.value == supplyName:
                 return supply.value
+        logger.info('Invalid supply name: ' + supplyName)
         raise InstanceCreationFailed(supplyName + ' is not a valid Supply')
 
     @classmethod
@@ -37,15 +45,16 @@ class Application:
         else:
             raise StatusTransitionFailed('Canceled applications cannot be rejected')
 
-    def approveApplication(self):
+    def approve(self):
         if self.status != ApplicationStatus.CANCELED.value:
-            self.status = ApplicationStatus.ACCEPTED.value
+            self.status = ApplicationStatus.APPROVED.value
         else:
             raise StatusTransitionFailed('Canceled applications cannot be approved')
 
     def cancelApplication(userEmail, appID):
         try:
-            app = applicationDatabaseManager.DatabaseManager().findApplicationBy(userEmail, appID)
+            objectManager = applicationDatabaseManager.DatabaseManager()
+            app = objectManager.findApplicationBy(userEmail, appID)
             if app is None:
                 raise ValueError('Application #' + appID + ' Does not exist for the current user')
             else:
@@ -58,7 +67,7 @@ class Application:
                 app.ID = appID
                 app.status = appStatus
                 app.cancel()
-                app.updateWithNewStatus()
+                objectManager.cancelApplication(app)
         except (ValueError, DatabaseConnectionFailed) as e:
             return e
 
@@ -72,6 +81,7 @@ class Application:
             )
             return self.ID
         except Exception as e:
+            logger.error('Database error: ' + str(e))
             raise DatabaseConnectionFailed("Connection with the database failed, please try again later")
 
     def itemToInsert(self):
@@ -95,37 +105,55 @@ class Application:
                 'timeStamp': {'S': self.timeStamp}
             }
 
-    def updateWithNewStatus(self):
+    def approveApplication(filler, appID, provider):
         try:
             objectManager = applicationDatabaseManager.DatabaseManager()
-            resp = objectManager.dynamoDB().update_item(
-                TableName=objectManager.applicationTable(),
-                Key={
-                    'applicationID': {'S': self.ID},
-                    'filler': {'S': self.filler}
-                },
-                UpdateExpression="set #stat = :stat",
-                ExpressionAttributeValues={
-                    ':stat': {'S': self.status}
-                },
-                ExpressionAttributeNames={
-                    '#stat': 'status'
-                }
-            )
-        except:
-            raise DatabaseConnectionFailed("Connection with the database failed, please try again later")
+            app = objectManager.findApplicationBy(filler, appID)
+            if app is None:
+                raise ValueError('Application #' + appID + ' Does not exist')
+            else:
+                appID = app['applicationID'].get('S')
+                appStatus = app['status'].get('S')
+                appFiller = app['filler'].get('S')
+                appArea = app['area'].get('S')
+                appSupply = app['supply'].get('S')
+                app = Application(appFiller, appSupply, appArea, None)
+                app.ID = appID
+                app.status = appStatus
+                app.approve()
+                objectManager.approveApplication(app, provider)
+        except (ValueError, DatabaseConnectionFailed, StatusTransitionFailed) as e:
+            return e
 
-    def applicationsBy(userEmail):
+    def rejectApplication(filler, appID, aMotive):
         try:
             objectManager = applicationDatabaseManager.DatabaseManager()
-            applications = objectManager.dynamoDB().query(
-                TableName=objectManager.applicationTable(),
-                KeyConditionExpression='filler = :filler',
-                ExpressionAttributeValues={':filler': {'S': userEmail}}
-            )
-            items = applications['Items']
-            if not items:
-                return []
-            return items
-        except:
+            app = objectManager.findApplicationBy(filler, appID)
+            if app is None:
+                raise ValueError('Application #' + appID + ' Does not exist')
+            else:
+                appID = app['applicationID'].get('S')
+                appStatus = app['status'].get('S')
+                appFiller = app['filler'].get('S')
+                appArea = app['area'].get('S')
+                appSupply = app['supply'].get('S')
+                app = Application(appFiller, appSupply, appArea, None)
+                app.ID = appID
+                app.status = appStatus
+                app.reject()
+                objectManager.rejectApplication(app, aMotive)
+        except (ValueError, DatabaseConnectionFailed, StatusTransitionFailed) as e:
+            return e
+
+    @classmethod
+    def applicationsBy(cls, userEmail):
+        try:
+            objectManager = applicationDatabaseManager.DatabaseManager()
+            user = User.findUserByEmail(userEmail)
+            if user.get('role').get('S') == 'administrator':
+                return objectManager.allApplications()
+            else:
+                return objectManager.applicationsForUser(userEmail)
+        except Exception as e:
+            logger.error('Database error: ' + str(e))
             raise DatabaseConnectionFailed("Connection with the database failed, please try again later")

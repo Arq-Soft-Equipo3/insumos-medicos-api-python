@@ -1,6 +1,8 @@
  
 # Insumos-medicos-api-python
 
+[![Arq-Soft-Equipo3](https://circleci.com/gh/Arq-Soft-Equipo3/insumos-medicos-api-python.svg?style=svg)]
+
 This project contains source code and supporting files for a serverless application based on Amazon AWS Lambda.
 
 ## Requirements

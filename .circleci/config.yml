@@ -28,6 +28,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: dependencies-node-{{ checksum "package.json" }}- run:
+          key: dependencies-node-{{ checksum "package.json" }}
+      - run:
           name: Deploy application
           command: sls deploy -v

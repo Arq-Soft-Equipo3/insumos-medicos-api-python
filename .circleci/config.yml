@@ -16,3 +16,6 @@ jobs:
           command: |
             . venv/bin/activate
             python3 -m unittest tests/test*
+      - run:
+          name: Deploy application
+          command: sls deploy

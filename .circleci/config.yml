@@ -1,16 +1,33 @@
-version: 2.1
-orbs:
-   aws-cli: circleci/aws-cli@1.0
-   serverless: circleci/serverless-framework@1.0
+version: 2
 jobs:
-   one:
-     executor: serverless/default
-     steps:
-       - checkout
-       - aws-cli/setup
-       - serverless/setup
-       - run: sls deploy 
-workflows:
-  one_and_two:
-    jobs:
-      - one
+  deploy:
+    working_dir: ~/python-ci
+    docker: 
+      - image: circleci/python:3.6.1
+    steps: 
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-node-{{ checksum "package.json" }}
+            - dependencies-node
+      - run:
+          name: Install python dependencies
+          command: |
+            sudo pip install -r requirements.txt
+      - run:
+          name: Install node and npm
+          command: |
+            curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+            node --version && npm -v
+      - run: 
+          name: Install Serverless CLI and dependencies
+          command: | 
+            sudo npm i -g serverless
+            npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-node-{{ checksum "package.json" }}- run:
+          name: Deploy application
+          command: sls deploy -v

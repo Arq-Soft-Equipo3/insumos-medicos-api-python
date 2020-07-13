@@ -2,12 +2,17 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/python:3.6.2-stretch-browsers
+      - image: circleci/python:3.6.2
     steps:
       - checkout
       - run:
-          name: Install Python deps in a venv
+          name: Install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
             pip install -r requirements.txt
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            python3 -m unittest tests/test*

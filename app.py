@@ -91,6 +91,8 @@ def submitApplication():
         return jsonify({"message": e.message}), 500
     except AuthorizationFailed as e:
         return jsonify({"message": e.message}), 401
+    except ValueError as e:
+        return jsonify({"message": str(e)}), 412
 
 
 @app.route("/applications", methods=["GET"])

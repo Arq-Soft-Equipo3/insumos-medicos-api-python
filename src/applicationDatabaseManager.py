@@ -2,7 +2,9 @@ import logging
 import os
 import boto3
 
+from src.applicationStatus import ApplicationStatus
 from src.customExceptions import DatabaseConnectionFailed
+from src.supplyProvider import SupplyProvider
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -126,3 +128,24 @@ class DatabaseManager:
         except Exception as e:
             logger.error('Database error: ' + str(e))
             raise DatabaseConnectionFailed("Connection with the database failed, please try again later")
+
+    # This method should do the query in the database. This will be correctly implemented soon.
+    # I filtered this in memory because I need a little more time to learn 'bout complex querys in Dynamo
+    def findExistingApplication(self, anEmailAddress, supplyName, area, drugName=None):
+        applications = self.applicationsForUser(anEmailAddress)
+        print('Now im here')
+        print(applications)
+        if applications:
+            print('Did I entered?')
+            return self.findIfExistingApplication(applications, supplyName, area, drugName)
+        else:
+            return None
+
+    def findIfExistingApplication(self, applications, supplyName, area, drugName=None):
+        for app in applications:
+            if app['area'].get('S') == area and app['supply'].get('S') == supplyName and app['status'].get(
+                    'S') == ApplicationStatus.PENDING.value or (
+                    app['supply'].get('S') == SupplyProvider.MEDICAMENTO.value and app['medicine'].get(
+                'S') == drugName):
+                print('I encountered something!')
+                return app

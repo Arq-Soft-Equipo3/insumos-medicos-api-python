@@ -13,8 +13,9 @@ logger.setLevel(logging.INFO)
 
 
 class Application:
-    def __init__(self, anEmailAddress, supplyName, area, drugName):
+    def __init__(self, anEmailAddress, supplyName, area, drugName=None):
         self.assertFieldsNotEmpty(anEmailAddress, supplyName, area)
+        print ('Passing by')
         self.ID = str(idProvider.getID())
         self.filler = anEmailAddress
         self.supply = self.assertIsValidSupply(supplyName)
@@ -63,7 +64,7 @@ class Application:
                 appFiller = app['filler'].get('S')
                 appArea = app['area'].get('S')
                 appSupply = app['supply'].get('S')
-                app = Application(appFiller, appSupply, appArea, None)
+                app = Application(appFiller, appSupply, appArea)
                 app.ID = appID
                 app.status = appStatus
                 app.cancel()
@@ -72,6 +73,7 @@ class Application:
             return e
 
     def addApplication(self):
+        self.assertNotDuplicatePetition()
         self.itemToInsert()
         try:
             objectManager = applicationDatabaseManager.DatabaseManager()
@@ -144,6 +146,12 @@ class Application:
                 objectManager.rejectApplication(app, aMotive)
         except (ValueError, DatabaseConnectionFailed, StatusTransitionFailed) as e:
             return e
+
+    def assertNotDuplicatePetition(self):
+            objectManager = applicationDatabaseManager.DatabaseManager()
+            app = objectManager.findExistingApplication(self.filler,self.supply, self.area, self.drugName)
+            if app is not None:
+                raise ValueError('A similar application is pending, please check again.')
 
     @classmethod
     def applicationsBy(cls, userEmail):

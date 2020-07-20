@@ -133,10 +133,7 @@ class DatabaseManager:
     # I filtered this in memory because I need a little more time to learn 'bout complex querys in Dynamo
     def findExistingApplication(self, anEmailAddress, supplyName, area, drugName=None):
         applications = self.applicationsForUser(anEmailAddress)
-        print('Now im here')
-        print(applications)
         if applications:
-            print('Did I entered?')
             return self.findIfExistingApplication(applications, supplyName, area, drugName)
         else:
             return None
@@ -144,7 +141,7 @@ class DatabaseManager:
     def findIfExistingApplication(self, applications, supplyName, area, drugName=None):
         for app in applications:
             if app['area'].get('S') == area and app['supply'].get('S') == supplyName and app['status'].get(
-                    'S') == ApplicationStatus.PENDING.value or (
+                    'S') == ApplicationStatus.PENDING.value and (
                     app['supply'].get('S') == SupplyProvider.MEDICAMENTO.value and app['medicine'].get(
                 'S') == drugName):
                 print('I encountered something!')

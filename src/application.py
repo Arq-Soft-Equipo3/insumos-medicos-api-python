@@ -15,7 +15,6 @@ logger.setLevel(logging.INFO)
 class Application:
     def __init__(self, anEmailAddress, supplyName, area, drugName=None):
         self.assertFieldsNotEmpty(anEmailAddress, supplyName, area)
-        print ('Passing by')
         self.ID = str(idProvider.getID())
         self.filler = anEmailAddress
         self.supply = self.assertIsValidSupply(supplyName)
@@ -148,10 +147,10 @@ class Application:
             return e
 
     def assertNotDuplicatePetition(self):
-            objectManager = applicationDatabaseManager.DatabaseManager()
-            app = objectManager.findExistingApplication(self.filler,self.supply, self.area, self.drugName)
-            if app is not None:
-                raise ValueError('A similar application is pending, please check again.')
+        objectManager = applicationDatabaseManager.DatabaseManager()
+        app = objectManager.findExistingApplication(self.filler, self.supply, self.area, self.drugName)
+        if app is not None:
+            raise ValueError('A similar application is pending, please check again.')
 
     @classmethod
     def applicationsBy(cls, userEmail):

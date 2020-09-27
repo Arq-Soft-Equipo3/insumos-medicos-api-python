@@ -13,11 +13,8 @@ logger.setLevel(logging.INFO)
 
 def findIfExistingApplication(applications, supplyName, area, drugName=None):
     for app in applications:
-        if app['area'].get('S') == area and app['supply'].get('S') == supplyName and app['status'].get(
-                'S') == ApplicationStatus.PENDING.value and (
-                app['supply'].get('S') == SupplyProvider.MEDICAMENTO.value and app['medicine'].get(
-            'S') == drugName):
-            print('I encountered something!')
+        if app['area'] == area and app['supply'] == supplyName and app['status'] == ApplicationStatus.PENDING.value and (
+                app['supply'] == SupplyProvider.MEDICAMENTO.value and app['medicine'] == drugName):
             return app
 
 

@@ -43,7 +43,7 @@ def logInUser():
             authToken = auth.AuthManager().authenticate(usr, userPassword)
         return jsonify({'token': authToken}), 200
     except DatabaseConnectionFailed as e:
-        return jsonify({"message": e.message}), 500
+        return jsonify({"message": "Something went wrong"}), 500
     except AuthorizationFailed as e:
         return jsonify({"message": e.message}), 401
 
@@ -70,7 +70,7 @@ def signUpUser():
     except InstanceCreationFailed as e:
         return jsonify({"errors": e.message}), 422
     except DatabaseConnectionFailed as e:
-        return jsonify({"message": e.message}), 500
+        return jsonify({"message": "Something went wrong"}), 500
     except AuthorizationFailed as e:
         return jsonify({"message": e.message}), 401
 
@@ -82,13 +82,13 @@ def submitApplication():
         supply = request.json.get('supply')
         area = request.json.get('area')
         medicine = request.json.get('medicine')
-        applicationID = createApplicationWith(bearer, supply, area, medicine)
+        application = createApplicationWith(bearer, supply, area, medicine)
 
-        return jsonify({"message": "The application #" + applicationID + " was successfully submitted"}), 200
+        return jsonify(application), 200
     except InstanceCreationFailed as e:
         return jsonify({"errors": e.message}), 422
     except DatabaseConnectionFailed as e:
-        return jsonify({"message": e.message}), 500
+        return jsonify({"message": "Something went wrong"}), 500
     except AuthorizationFailed as e:
         return jsonify({"message": e.message}), 401
     except ValueError as e:
@@ -105,49 +105,48 @@ def applications():
     except AuthorizationFailed as e:
         return jsonify({"message": e.message}), 401
     except DatabaseConnectionFailed as e:
-        return jsonify({e.message}), 500
+        return jsonify({"Something went wrong"}), 500
 
 
-@app.route("/applications/:id/cancel", methods=["POST"])
-def cancelApplication():
+@app.route("/applications/<id>/cancel", methods=["POST"])
+def cancelApplication(id):
+    print(id)
     try:
         bearer = request.headers.get('Authorization')
         userEmail = decodeToken(bearer)
-        Application.cancelApplication(userEmail, request.args.get('id'))
-        return jsonify({'message': 'Application #' + request.json.get('id') + ' was successfully canceled'}), 200
+        Application.cancelApplication(userEmail, id)
+        return jsonify({'message': 'Application #' + id + ' was successfully canceled'}), 200
     except DatabaseConnectionFailed as dcf:
-        return jsonify({"message": dcf.message}), 500
+        return jsonify({"message": "Something went wrong"}), 500
     except AuthorizationFailed as af:
         return jsonify({"message": af.message}), 401
 
 
-@app.route("/applications/:id/approve", methods=["POST"])
-def approveApplication():
+@app.route("/applications/<id>/approve", methods=["POST"])
+def approveApplication(id):
     try:
         bearer = request.headers.get('Authorization')
-        applicationID = request.args.get('id')
         provider = request.json.get('provider')
         filler = request.json.get('filler')
         decodeToken(bearer)
-        Application.approveApplication(filler, applicationID, provider)
-        return jsonify({'message': 'Application #' + applicationID + ' was approved'}), 200
+        Application.approveApplication(filler, id, provider)
+        return jsonify({'message': 'Application #' + id + ' was approved'}), 200
     except DatabaseConnectionFailed as dcf:
-        return jsonify({"message": dcf.message}), 500
+        return jsonify({"message": "Something went wrong"}), 500
     except AuthorizationFailed as af:
         return jsonify({"message": af.message}), 401
 
 
-@app.route("/applications/:id/reject", methods=["POST"])
-def rejectApplication():
+@app.route("/applications/<id>/reject", methods=["POST"])
+def rejectApplication(id):
     try:
         bearer = request.headers.get('Authorization')
-        applicationID = request.args.get('id')
         motive = request.json.get('motive')
         filler = request.json.get('filler')
         decodeToken(bearer)
-        Application.rejectApplication(filler, applicationID, motive)
-        return jsonify({'message': 'Application #' + applicationID + ' was rejected'}), 200
+        Application.rejectApplication(filler, id, motive)
+        return jsonify({'message': 'Application #' + id + ' was rejected'}), 200
     except DatabaseConnectionFailed as dcf:
-        return jsonify({"message": dcf.message}), 500
+        return jsonify({"message": "Something went wrong"}), 500
     except AuthorizationFailed as af:
         return jsonify({"message": af.message}), 401

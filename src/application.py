@@ -57,11 +57,11 @@ class Application:
             if app is None:
                 raise ValueError('Application #' + appID + ' Does not exist for the current user')
             else:
-                appID = app['applicationID'].get('S')
-                appStatus = app['status'].get('S')
-                appFiller = app['filler'].get('S')
-                appArea = app['area'].get('S')
-                appSupply = app['supply'].get('S')
+                appID = app['applicationID']
+                appStatus = app['status']
+                appFiller = app['filler']
+                appArea = app['area']
+                appSupply = app['supply']
                 app = Application(appFiller, appSupply, appArea)
                 app.ID = appID
                 app.status = appStatus
@@ -112,11 +112,11 @@ class Application:
             if app is None:
                 raise ValueError('Application #' + appID + ' Does not exist')
             else:
-                appID = app['applicationID'].get('S')
-                appStatus = app['status'].get('S')
-                appFiller = app['filler'].get('S')
-                appArea = app['area'].get('S')
-                appSupply = app['supply'].get('S')
+                appID = app['applicationID']
+                appStatus = app['status']
+                appFiller = app['filler']
+                appArea = app['area']
+                appSupply = app['supply']
                 app = Application(appFiller, appSupply, appArea, None)
                 app.ID = appID
                 app.status = appStatus
@@ -132,11 +132,11 @@ class Application:
             if app is None:
                 raise ValueError('Application #' + appID + ' Does not exist')
             else:
-                appID = app['applicationID'].get('S')
-                appStatus = app['status'].get('S')
-                appFiller = app['filler'].get('S')
-                appArea = app['area'].get('S')
-                appSupply = app['supply'].get('S')
+                appID = app['applicationID']
+                appStatus = app['status']
+                appFiller = app['filler']
+                appArea = app['area']
+                appSupply = app['supply']
                 app = Application(appFiller, appSupply, appArea, None)
                 app.ID = appID
                 app.status = appStatus

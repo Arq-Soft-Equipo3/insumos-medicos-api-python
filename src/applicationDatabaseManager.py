@@ -5,9 +5,20 @@ import boto3
 from src.applicationStatus import ApplicationStatus
 from src.customExceptions import DatabaseConnectionFailed
 from src.supplyProvider import SupplyProvider
+from dynamodb_json import json_util as json
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+
+
+def findIfExistingApplication(applications, supplyName, area, drugName=None):
+    for app in applications:
+        if app['area'].get('S') == area and app['supply'].get('S') == supplyName and app['status'].get(
+                'S') == ApplicationStatus.PENDING.value and (
+                app['supply'].get('S') == SupplyProvider.MEDICAMENTO.value and app['medicine'].get(
+            'S') == drugName):
+            print('I encountered something!')
+            return app
 
 
 class DatabaseManager:
@@ -43,7 +54,7 @@ class DatabaseManager:
         item = application.get('Item')
         if not item:
             return None
-        return item
+        return json.loads(item)
 
     def allApplications(self):
         applications = self.dynamoDB().scan(
@@ -52,7 +63,7 @@ class DatabaseManager:
         items = applications['Items']
         if not items:
             return []
-        return items
+        return json.loads(items)
 
     def applicationsForUser(self, userEmail):
         applications = self.dynamoDB().query(
@@ -63,7 +74,7 @@ class DatabaseManager:
         items = applications['Items']
         if not items:
             return []
-        return items
+        return json.loads(items)
 
     def cancelApplication(self, anApplication):
         try:
@@ -134,15 +145,6 @@ class DatabaseManager:
     def findExistingApplication(self, anEmailAddress, supplyName, area, drugName=None):
         applications = self.applicationsForUser(anEmailAddress)
         if applications:
-            return self.findIfExistingApplication(applications, supplyName, area, drugName)
+            return findIfExistingApplication(applications, supplyName, area, drugName)
         else:
             return None
-
-    def findIfExistingApplication(self, applications, supplyName, area, drugName=None):
-        for app in applications:
-            if app['area'].get('S') == area and app['supply'].get('S') == supplyName and app['status'].get(
-                    'S') == ApplicationStatus.PENDING.value and (
-                    app['supply'].get('S') == SupplyProvider.MEDICAMENTO.value and app['medicine'].get(
-                'S') == drugName):
-                print('I encountered something!')
-                return app

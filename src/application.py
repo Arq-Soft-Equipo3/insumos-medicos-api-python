@@ -1,12 +1,11 @@
-import logging
-
 from src import applicationStatus, applicationDatabaseManager, supplyProvider, customExceptions, idProvider
 from src.customExceptions import DatabaseConnectionFailed, InstanceCreationFailed, StatusTransitionFailed
 from src.applicationStatus import ApplicationStatus
 from src.supplyProvider import SupplyProvider
-import datetime
-
+from dynamodb_json import json_util as json
 from src.user import User
+import datetime
+import logging
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -73,14 +72,14 @@ class Application:
 
     def addApplication(self):
         self.assertNotDuplicatePetition()
-        self.itemToInsert()
+        item = self.itemToInsert()
         try:
             objectManager = applicationDatabaseManager.DatabaseManager()
             resp = objectManager.dynamoDB().put_item(
                 TableName=objectManager.applicationTable(),
-                Item=self.itemToInsert()
+                Item=item
             )
-            return self.ID
+            return json.loads(item)
         except Exception as e:
             logger.error('Database error: ' + str(e))
             raise DatabaseConnectionFailed("Connection with the database failed, please try again later")

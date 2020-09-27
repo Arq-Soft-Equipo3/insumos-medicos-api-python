@@ -30,7 +30,7 @@ def decodeToken(bearer):
     return userEmail
 
 
-@app.route("/user/login", methods=["POST"])
+@app.route("/users/login", methods=["POST"])
 def logInUser():
     try:
         userEmail = request.json.get('email')
@@ -48,7 +48,7 @@ def logInUser():
         return jsonify({"message": e.message}), 401
 
 
-@app.route("/user/signup", methods=["POST"])
+@app.route("/users/signup", methods=["POST"])
 def signUpUser():
     try:
         userEmail = request.json.get('email')
@@ -108,15 +108,12 @@ def applications():
         return jsonify({e.message}), 500
 
 
-@app.route("/applications/cancel", methods=["POST"])
+@app.route("/applications/:id/cancel", methods=["POST"])
 def cancelApplication():
     try:
         bearer = request.headers.get('Authorization')
         userEmail = decodeToken(bearer)
-        if request.json.get('id') is None:
-            return jsonify({"errors": [{"field": "id", "message": "id is required"}]}), 422
-        else:
-            Application.cancelApplication(userEmail, request.json.get('id'))
+        Application.cancelApplication(userEmail, request.args.get('id'))
         return jsonify({'message': 'Application #' + request.json.get('id') + ' was successfully canceled'}), 200
     except DatabaseConnectionFailed as dcf:
         return jsonify({"message": dcf.message}), 500
@@ -124,18 +121,15 @@ def cancelApplication():
         return jsonify({"message": af.message}), 401
 
 
-@app.route("/applications/approve", methods=["POST"])
+@app.route("/applications/:id/approve", methods=["POST"])
 def approveApplication():
     try:
         bearer = request.headers.get('Authorization')
-        applicationID = request.json.get('id')
+        applicationID = request.args.get('id')
         provider = request.json.get('provider')
         filler = request.json.get('filler')
         decodeToken(bearer)
-        if applicationID is None or provider is None or filler is None:
-            return jsonify({"errors": [{"field": "id", "message": "id is required"}]}), 422
-        else:
-            Application.approveApplication(filler, applicationID, provider)
+        Application.approveApplication(filler, applicationID, provider)
         return jsonify({'message': 'Application #' + applicationID + ' was approved'}), 200
     except DatabaseConnectionFailed as dcf:
         return jsonify({"message": dcf.message}), 500
@@ -143,26 +137,17 @@ def approveApplication():
         return jsonify({"message": af.message}), 401
 
 
-@app.route("/applications/reject", methods=["POST"])
+@app.route("/applications/:id/reject", methods=["POST"])
 def rejectApplication():
     try:
         bearer = request.headers.get('Authorization')
-        applicationID = request.json.get('id')
+        applicationID = request.args.get('id')
         motive = request.json.get('motive')
         filler = request.json.get('filler')
         decodeToken(bearer)
-        if applicationID is None or motive is None or filler is None:
-            return jsonify({"errors": [{"field": "id", "message": "id is required"}]}), 422
-        else:
-            Application.rejectApplication(filler, applicationID, motive)
+        Application.rejectApplication(filler, applicationID, motive)
         return jsonify({'message': 'Application #' + applicationID + ' was rejected'}), 200
     except DatabaseConnectionFailed as dcf:
         return jsonify({"message": dcf.message}), 500
     except AuthorizationFailed as af:
         return jsonify({"message": af.message}), 401
-
-
-# test route
-@app.route("/")
-def hello():
-    return "Hello World!"

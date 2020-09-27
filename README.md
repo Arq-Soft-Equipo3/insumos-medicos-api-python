@@ -6,7 +6,7 @@
 This project contains source code and supporting files for a serverless application based on Amazon AWS Lambda.
 
 ## Requirements
-_note: the instructions or commands are for linux based OS's. For Windows installation instructions check each provider site. Although using this may present trouble on Windows's based systems due to Docker compatibility issues_ 
+_Note: The instructions or commands are for linux based OS's. For Windows installation instructions check each provider site. Although using this may present trouble on Windows's based systems due to Docker compatibility issues, unless [WSL2](https://docs.microsoft.com/en-us/windows/wsl/about) is used_ 
 
 For this project we'll need these tools:
 

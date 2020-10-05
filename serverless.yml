@@ -62,8 +62,8 @@ resources:
             AttributeName: email
             KeyType: HASH
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
         TableName: ${self:custom.userTableName}
 
     ApplicationDynamoDBTable:

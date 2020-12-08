@@ -63,7 +63,7 @@ resources:
             KeyType: HASH
         ProvisionedThroughput:
           ReadCapacityUnits: 5
-          WriteCapacityUnits: 5
+          WriteCapacityUnits: 1
         TableName: ${self:custom.userTableName}
 
     ApplicationDynamoDBTable:
@@ -84,6 +84,6 @@ resources:
             AttributeName: applicationID
             KeyType: RANGE
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
         TableName: ${self:custom.applicationTableName}
